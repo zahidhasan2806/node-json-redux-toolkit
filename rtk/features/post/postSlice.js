@@ -4,17 +4,17 @@ const fetch = require('node-fetch');
 //initial State
 const initialState = {
     loading: false,
-    posts: [],
+    post: {},
     error: "",
 };
 
 //create async thunk
-const fetchPosts = createAsyncThunk('post/fetchPosts', async () => {
+const fetchPost = createAsyncThunk('post/fetchPost', async () => {
     const response = await fetch('https://jsonplaceholder.typicode.com/posts/28');
 
-    const posts = await response.json();
+    const post = await response.json();
 
-    return posts;
+    return post;
 })
 
 
@@ -24,23 +24,23 @@ const postSlice = createSlice({
     name: "post",
     initialState,
     extraReducers: (builder) => {
-        builder.addCase(fetchPosts.pending, (state, action) => {
+        builder.addCase(fetchPost.pending, (state, action) => {
             state.loading = true;
             state.error = '';
-        })
+        });
 
-        builder.addCase(fetchPosts.fulfilled, (state, action) => {
+        builder.addCase(fetchPost.fulfilled, (state, action) => {
             state.loading = false;
             state.error = '';
-            state.posts = action.payload
+            state.post = action.payload
         })
-        builder.addCase(fetchPosts.rejected, (state, action) => {
+        builder.addCase(fetchPost.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
-            state.posts = []
+            state.posts = {}
         })
     }
 });
 
 module.exports = postSlice.reducer;
-module.exports.fetchPosts = fetchPosts
+module.exports.fetchPost = fetchPost;
